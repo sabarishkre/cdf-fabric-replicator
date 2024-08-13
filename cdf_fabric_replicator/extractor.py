@@ -299,7 +299,8 @@ class CdfFabricExtractor(Extractor[Config]):
         db_name: str,
         incremental_field: str,
     ) -> None:
-        state = str(self.state_store.get_state(state_id)[0])
+        state = self.state_store.get_state(state_id)[0]
+        state = str(state) if state else None
         for df in self.convert_lakehouse_data_to_df_batch_filtered(
             file_path, token, state, incremental_field
         ):
