@@ -1,0 +1,66 @@
+logger:
+    console:
+        level: INFO
+
+# Cognite project to stream your datapoints from
+cognite:
+    host: ${COGNITE_BASE_URL}
+    project: ${COGNITE_PROJECT}
+
+    idp-authentication:
+        token-url: ${COGNITE_TOKEN_URL}
+        client-id: ${COGNITE_CLIENT_ID}
+        secret: ${COGNITE_CLIENT_SECRET}
+        scopes:
+            - ${COGNITE_BASE_URL}/.default
+    extraction-pipeline:
+        external-id: ${COGNITE_EXTRACTION_PIPELINE}
+
+#Extractor config
+extractor:
+    state-store:
+        raw:
+            database: ${COGNITE_STATE_DB}
+            table: ${COGNITE_STATE_TABLE}
+    subscription-batch-size: 100
+    ingest-batch-size: 100
+    poll-time: 5
+
+# subscriptions to stream
+subscriptions:
+    - external_id: twenceAbsorberSubscription
+      partitions:
+          - 0
+      lakehouse_abfss_path_dps: ${LAKEHOUSE_ABFSS_PREFIX}/Tables/${DPS_TABLE_NAME}
+      lakehouse_abfss_path_ts: ${LAKEHOUSE_ABFSS_PREFIX}/Tables/${TS_TABLE_NAME}
+
+# sync data model
+data_modeling:
+    - space: cc_plant
+      lakehouse_abfss_prefix: ${LAKEHOUSE_ABFSS_PREFIX}
+
+source:
+    abfss_prefix: ${LAKEHOUSE_ABFSS_PREFIX}
+    event_path: ${EXTRACTOR_EVENT_PATH}
+    file_path: ${EXTRACTOR_FILE_PATH}
+    raw_time_series_path: ${EXTRACTOR_RAW_TS_PATH}
+    read_batch_size: 1000
+    data_set_id: ${EXTRACTOR_DATASET_ID}
+    raw_tables:
+        - raw_path: ${EXTRACTOR_RAW_TABLE_PATH}
+          table_name: ${EXTRACTOR_RAW_TABLE_NAME}
+          db_name: ${EXTRACTOR_RAW_DB_NAME}
+          incremental_field: ${EXTRACTOR_RAW_INCREMENTAL_FIELD}
+
+destination:
+    time_series_prefix: ${EXTRACTOR_TS_PREFIX}
+
+# sync events
+event:
+    lakehouse_abfss_path_events: ${LAKEHOUSE_ABFSS_PREFIX}/Tables/${EVENT_TABLE_NAME}
+    batch_size: 5
+
+file:
+    lakehouse_abfss_path_files: ${LAKEHOUSE_ABFSS_PREFIX}/Tables/${FILE_TABLE_NAME}
+    mime_types: 
+        - image/png
