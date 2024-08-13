@@ -22,7 +22,7 @@ def main() -> None:
     stop_event = CancellationToken()
     worker_list = []
 
-    """ with EventsReplicator(
+    with EventsReplicator(
         metrics=safe_get(Metrics), stop_event=stop_event
     ) as event_replicator:
         worker_list.append(threading.Thread(target=event_replicator.run))
@@ -45,7 +45,7 @@ def main() -> None:
     with RawTableReplicator(
         metrics=safe_get(Metrics), stop_event=stop_event
     ) as raw_replicator:
-        worker_list.append(threading.Thread(target=raw_replicator.run)) """
+        worker_list.append(threading.Thread(target=raw_replicator.run))
 
     with FileReplicator(
         metrics=safe_get(Metrics), stop_event=stop_event
