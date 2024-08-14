@@ -63,6 +63,7 @@ class EventsReplicator(Extractor):
 
     def process_events(self) -> None:
         limit = self.config.event.batch_size
+        data_set_ids = self.config.event.data_set_ids
         last_created_time = self.get_event_state(self.event_state_key)
 
         if last_created_time is None:
@@ -73,7 +74,7 @@ class EventsReplicator(Extractor):
                 f"Last created time: {datetime.fromtimestamp(last_created_time / 1000).isoformat()}"
             )
 
-        for event_list in self.get_events(limit, last_created_time):
+        for event_list in self.get_events(limit, data_set_ids, last_created_time):
             events_dict = event_list.dump()
             if len(events_dict) > 0:
                 if isinstance(events_dict, dict):
@@ -91,7 +92,7 @@ class EventsReplicator(Extractor):
                 self.logger.info("No events found in current batch.")
 
     def get_events(
-        self, limit: int, last_created_time: int
+        self, limit: int, data_set_ids: str, last_created_time: int
     ) -> Iterator[Event] | Iterator[EventList]:
         # only pull events that created after last_created_time (hence the +1); assuming no other events are created at the same time
         self.logger.debug(
@@ -101,6 +102,7 @@ class EventsReplicator(Extractor):
             chunk_size=limit,
             created_time={"min": last_created_time + 1},
             sort=("createdTime", "asc"),
+            data_set_ids = 1891502169976881,
         )
 
     def get_event_state(self, event_state_key: str) -> int | None:

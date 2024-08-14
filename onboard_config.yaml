@@ -58,9 +58,15 @@ destination:
 # sync events
 event:
     lakehouse_abfss_path_events: ${LAKEHOUSE_ABFSS_PREFIX}/Tables/${EVENT_TABLE_NAME}
+    data_set_ids: "1891502169976881"
     batch_size: 5
 
 file:
     lakehouse_abfss_path_files: ${LAKEHOUSE_ABFSS_PREFIX}/Tables/${FILE_TABLE_NAME}
     mime_types: 
         - image/png
+
+raw_tables:
+    - table_name: ${EXTRACTOR_RAW_SOURCE_TABLE_NAME}
+      db_name: ${EXTRACTOR_RAW_SOURCE_DB_NAME}
+      lakehouse_abfss_path_raw: ${LAKEHOUSE_ABFSS_PREFIX}/${EXTRACTOR_RAW_TABLE_DESTINATION_PATH}

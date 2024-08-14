@@ -115,6 +115,8 @@ class RawTableReplicator(Extractor):
             row_dict = row.dump()["columns"]
             row_dict["key"] = row.key
             row_dict["last_updated_time"] = row.last_updated_time
+            if(row_dict["source"] == None):
+                row_dict["source"] = ""
             rows_dict.append(row_dict)
         if len(rows_dict) > 0:
             self.logger.info(f"Writing {len(rows)} rows to '{abfss_path}' table...")
