@@ -221,9 +221,9 @@ class TimeSeriesReplicator(Extractor):
                                 ts.description if ts.description else "",
                                 ts.is_string,
                                 ts.is_step,
-                                ts.unit,
-                                metadata,
-                                asset_xid,
+                                str(ts.unit),
+                                str(metadata),
+                                str(asset_xid),
                             ]
                         ]
                     ),
@@ -286,9 +286,11 @@ class TimeSeriesReplicator(Extractor):
         try:
             dt = DeltaTable(table, storage_options=storage_options)
             (
+                
                 dt.merge(
                     source=df,
-                    predicate="s.externalId = t.externalId AND s.timestamp = t.timestamp",
+                    predicate="s.externalId = t.externalId",
+                    # predicate="s.externalId = t.externalId AND s.timestamp = t.timestamp",
                     source_alias="s",
                     target_alias="t",
                 )
