@@ -49,6 +49,12 @@ class RawConfigSource:
 
 
 @dataclass
+class FileConfig:
+    lakehouse_abfss_path_files: str
+    mime_types : List[str]
+
+
+@dataclass
 class SourceConfig:
     abfss_prefix: str
     data_set_id: str
@@ -74,3 +80,4 @@ class Config(BaseConfig):
     data_modeling: Optional[List[DataModelingConfig]]
     event: Optional[EventConfig]
     raw_tables: Optional[List[RawConfigSource]]
+    file: Optional[FileConfig]
