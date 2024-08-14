@@ -59,7 +59,7 @@ destination:
 event:
     lakehouse_abfss_path_events: ${LAKEHOUSE_ABFSS_PREFIX}/Tables/${EVENT_TABLE_NAME}
     data_set_ids: "1891502169976881"
-    batch_size: 5
+    batch_size: 50000
 
 file:
     lakehouse_abfss_path_files: ${LAKEHOUSE_ABFSS_PREFIX}/Tables/${FILE_TABLE_NAME}

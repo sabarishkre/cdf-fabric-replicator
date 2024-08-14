@@ -76,6 +76,21 @@ class EventsReplicator(Extractor):
 
         for event_list in self.get_events(limit, data_set_ids, last_created_time):
             events_dict = event_list.dump()
+            self.logger.debug(f"Events count: {events_dict.count}")
+            for key in events_dict:
+                if 'metadata' in key:
+                    metadata = key['metadata']
+                    del key['metadata']
+                    key['metadata'] = (str(metadata))
+                else:
+                    key['metadata'] = ""
+                if 'assetIds' in key:
+                    assetIds = key['assetIds']
+                    del key['assetIds']
+                    key['assetIds'] = ','.join(str(i) for i in assetIds)
+                else:
+                    key['assetIds'] = ""
+
             if len(events_dict) > 0:
                 if isinstance(events_dict, dict):
                     events_dict = [events_dict]
@@ -100,7 +115,7 @@ class EventsReplicator(Extractor):
         )
         return self.cognite_client.events(
             chunk_size=limit,
-            created_time={"min": last_created_time + 1},
+            #created_time={"min": last_created_time + 1},
             sort=("createdTime", "asc"),
             data_set_ids = 1891502169976881,
         )

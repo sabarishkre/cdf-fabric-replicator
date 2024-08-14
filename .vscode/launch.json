@@ -20,7 +20,7 @@
             "request": "launch",
             "module": "cdf_fabric_replicator",
             "args": [
-                "example_config.yaml"
+                "onboard_config.yaml"
             ],
         },
         {
