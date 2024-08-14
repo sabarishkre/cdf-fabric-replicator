@@ -13,6 +13,9 @@ from cdf_fabric_replicator.config import Config
 from cdf_fabric_replicator.metrics import Metrics
 from cognite.client.data_classes import FileMetadataList
 from datetime import datetime
+import random
+import string
+import os
 
 
 class FileReplicator(Extractor):
@@ -56,6 +59,14 @@ class FileReplicator(Extractor):
         self.logger.info("Stop event set. Exiting...")
 
     def process_files(self) -> None:
+
+        testRunId = str(int(time.time()))
+        # Create directory
+        directory = f"./runs/{testRunId}"
+        os.makedirs(directory, exist_ok=True)
+        # self.cognite_client.files.download(directory=f"./runs/{testRunId}", id=[1314827462876424])
+        # exit()
+
         for mime_type in self.config.file.mime_types:
             state_id = f"{mime_type}_state"
             last_updated_time = self.get_state(state_id)
@@ -76,7 +87,10 @@ class FileReplicator(Extractor):
             while feedRows:
                 files = self.cognite_client.files.list(
                     mime_type = mime_type,
+                    data_set_ids=[6570415114656834],
+                    limit=None
                 )
+
                 if len(files) > 0:
                     try:
                         self.write_rows_to_lakehouse_table(
@@ -84,6 +98,11 @@ class FileReplicator(Extractor):
                         )
                         last_row = files[-1]
                         self.set_state(state_id, last_row.last_updated_time)
+
+                        print("Downloading files now")
+                        file_ids = [file.id for file in files]
+                        self.cognite_client.files.download(directory=f"./runs/{testRunId}", id=file_ids)
+
                     except DeltaError as e:
                         self.logger.error(
                             f"Error writing file rows to lakehouse tables: {e}"
@@ -91,6 +110,8 @@ class FileReplicator(Extractor):
                         raise e
                 else:
                     feedRows = False
+                feedRows = False
+            
 
     def get_state(self, state_key: str) -> int | None:
         state = self.state_store.get_state(external_id=state_key)
@@ -113,8 +134,12 @@ class FileReplicator(Extractor):
         self.logger.debug(f"------------------")
         self.logger.debug(f"{files}")
         self.logger.debug(f"------------------")
+        runId = str(int(time.time()))
+
         for file in files:
             file_dict = dict()
+            file_dict["runId"] = runId
+            file_dict["key"] = str(file.id)
             file_dict["external_id"] = str(file.external_id)
             file_dict["name"] = str(file.name)
             file_dict["source"] = str(file.source)
@@ -134,6 +159,7 @@ class FileReplicator(Extractor):
             file_dict["created_time"] = str(file.created_time)
             file_dict["last_updated_time"] = str(file.last_updated_time)
             files_dict.append(file_dict)
+        
         if len(files_dict) > 0:
             self.logger.info(f"Writing {len(files)} rows to '{abfss_path}' table...")
             data = pa.Table.from_pylist(files_dict)
@@ -150,7 +176,8 @@ class FileReplicator(Extractor):
                 self.logger.error(f"Error writing rows to lakehouse tables: {e}")
                 raise e
 
-            self.logger.info("Done.")
+            self.logger.info("Done saving file metadata.")
+        
 
     def write_or_merge_to_lakehouse_table(
         self, abfss_path: str, storage_options: Dict[str, str], data: pa.Table

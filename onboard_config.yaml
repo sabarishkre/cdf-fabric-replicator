@@ -1,6 +1,6 @@
 logger:
     console:
-        level: INFO
+        level: DEBUG
 
 # Cognite project to stream your datapoints from
 cognite:
@@ -63,4 +63,7 @@ event:
 file:
     lakehouse_abfss_path_files: ${LAKEHOUSE_ABFSS_PREFIX}/Tables/${FILE_TABLE_NAME}
     mime_types: 
+        - image/jpeg
         - image/png
+        - image/jpg
+        - image/gif
