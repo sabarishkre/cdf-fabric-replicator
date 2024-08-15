@@ -51,8 +51,13 @@ class RawConfigSource:
 
 @dataclass
 class FileConfig:
-    lakehouse_abfss_path_files: str
+    lakehouse_abfss_path_files_metadata: str
+    enabled: bool
     mime_types : List[str]
+    dataset_ids: List[int]
+    filestore_workspace: str
+    filestore_lakehouse: str
+    filestore_path: str
 
 
 @dataclass
@@ -65,6 +70,7 @@ class SourceConfig:
     read_batch_size: int = 1000
     file_path: Optional[str] = None
     raw_tables: Optional[List[RawConfig]] = None
+    
 
 
 @dataclass

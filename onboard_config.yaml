@@ -63,9 +63,24 @@ event:
     batch_size: 50000
 
 file:
-    lakehouse_abfss_path_files: ${LAKEHOUSE_ABFSS_PREFIX}/Tables/${FILE_TABLE_NAME}
-    mime_types: 
+    enabled: True
+    lakehouse_abfss_path_files_metadata: ${LAKEHOUSE_ABFSS_PREFIX}/Tables/${FILE_METADATA_TABLE_NAME}
+    mime_types:
+        - image/jpeg
         - image/png
+        - image/gif
+        - image/bmp
+        - image/webp
+        - image/svg+xml
+        - image/tiff
+        - image/x-icon
+    dataset_ids:
+        - 1891502169976881
+        - 6570415114656834
+    filestore_workspace: ${FILESTORE_WORKSPACE}
+    filestore_lakehouse: ${FILESTORE_LAKEHOUSE}
+    filestore_path: "/images/robot-garden2"
+
 
 raw_tables:
     - table_name: ${EXTRACTOR_RAW_SOURCE_TABLE_NAME}
