@@ -110,9 +110,6 @@ class FileReplicator(Extractor):
         token = self.azure_credential.get_token("https://storage.azure.com/.default")
 
         files_dict = []
-        self.logger.debug(f"------------------")
-        self.logger.debug(f"{files}")
-        self.logger.debug(f"------------------")
         for file in files:
             file_dict = dict()
             file_dict["external_id"] = str(file.external_id)
