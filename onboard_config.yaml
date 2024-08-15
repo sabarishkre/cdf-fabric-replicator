@@ -58,7 +58,8 @@ destination:
 # sync events
 event:
     lakehouse_abfss_path_events: ${LAKEHOUSE_ABFSS_PREFIX}/Tables/${EVENT_TABLE_NAME}
-    data_set_ids: "1891502169976881"
+    data_set_ids: 
+        - 1891502169976881
     batch_size: 50000
 
 file:
