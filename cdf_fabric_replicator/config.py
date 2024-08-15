@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List, Optional, Sequence
 
 from cognite.extractorutils.configtools import BaseConfig, StateStoreConfig
 
@@ -30,7 +30,7 @@ class DataModelingConfig:
 @dataclass
 class EventConfig:
     lakehouse_abfss_path_events: str
-    data_set_ids: str
+    data_set_ids: Optional[int | Sequence [int]] = None
     batch_size: int = 1000
 
 

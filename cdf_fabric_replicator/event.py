@@ -1,6 +1,6 @@
 import logging
 import time
-from typing import Iterator, List, Dict, Any, Optional
+from typing import Iterator, List, Dict, Any, Optional, Sequence
 from cognite.extractorutils.base import CancellationToken
 from cognite.extractorutils.base import Extractor
 from azure.identity import DefaultAzureCredential
@@ -107,7 +107,7 @@ class EventsReplicator(Extractor):
                 self.logger.info("No events found in current batch.")
 
     def get_events(
-        self, limit: int, data_set_ids: str, last_created_time: int
+        self, limit: int, data_set_ids: int | Sequence[int], last_created_time: int
     ) -> Iterator[Event] | Iterator[EventList]:
         # only pull events that created after last_created_time (hence the +1); assuming no other events are created at the same time
         self.logger.debug(
@@ -117,7 +117,7 @@ class EventsReplicator(Extractor):
             chunk_size=limit,
             #created_time={"min": last_created_time + 1},
             sort=("createdTime", "asc"),
-            data_set_ids = 1891502169976881,
+            data_set_ids = data_set_ids,
         )
 
     def get_event_state(self, event_state_key: str) -> int | None:
